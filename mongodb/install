@@ -1,0 +1,255 @@
+CentOS 中使用 yum 安装 mongodb
+
+执行如下命令创建源
+
+cd /etc/yum.repos.d/
+
+vim 10gen.repo  //创建一个源文件 10gen.repo 
+
+
+
+32位:(把下面信息粘贴到 10gen.repo 文件里)
+
+[10gen]  
+
+name=10gen Repository  
+
+baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/i686  
+
+gpgcheck=0 
+
+
+
+
+
+64位:(把下面的信息粘贴到 10gen.repo 文件里)
+
+[10gen]  
+
+name=10gen Repository  
+
+baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64  
+
+gpgcheck=0
+
+       
+
+(二)开始安装
+
+
+
+1.mongodb 服务器端安装,运行下面命令
+
+yum install mongo-10gen-server  
+
+可能需要你确认是否下载安装,输入y 并回车
+
+
+
+2.mongodb 客户端安装,运行下面命令
+
+yum install mongo-10gen
+
+同样可能需要你的确认,同上.
+
+
+
+3.
+
+经过一段时间的等待你看看到安装成功的提示.这是需要检查一下是否安装成功,查看配置文件中的数据库目录和log文件目录,确保你当前系统存在此目录和文件,保证你的mongodb
+
+使用的端口是被系统允许的且没有被占用.
+
+服务器配置文件在这里 /etc/mongod.conf,
+
+
+
+查看默认配置运行下面的一条命令
+
+cat /etc/mongod.conf 
+
+ 
+
+# mongo.conf  
+
+  
+
+#where to log  
+
+logpath=/var/log/mongo/mongod.log  
+
+  
+
+logappend=true #以追加方式写入日志  
+
+  
+
+# fork and run in background  
+
+fork = true  
+
+  
+
+#port = 27017 #端口  
+
+  
+
+dbpath=/var/lib/mongo #数据库文件保存位置  
+
+  
+
+# Enables periodic logging of CPU utilization and I/O wait  
+
+#启用定期记录CPU利用率和 I/O 等待  
+
+#cpu = true  
+
+  
+
+# Turn on/off security.  Off is currently the default  
+
+# 是否以安全认证方式运行，默认是不认证的非安全方式  
+
+#noauth = true  
+
+#auth = true  
+
+  
+
+# Verbose logging output.  
+
+# 详细记录输出  
+
+#verbose = true  
+
+  
+
+# Inspect all client data for validity on receipt (useful for  
+
+# developing drivers)用于开发驱动程序时的检查客户端接收数据的有效性  
+
+#objcheck = true  
+
+  
+
+# Enable db quota management 启用数据库配额管理，默认每个db可以有8个文件，可以用quotaFiles参数设置  
+
+#quota = true  
+
+# 设置oplog记录等级  
+
+# Set oplogging level where n is  
+
+#   0=off (default)  
+
+#   1=W  
+
+#   2=R  
+
+#   3=both  
+
+#   7=W+some reads  
+
+#oplog = 0  
+
+  
+
+# Diagnostic/debugging option 动态调试项  
+
+#nocursors = true  
+
+  
+
+# Ignore query hints 忽略查询提示  
+
+#nohints = true  
+
+# 禁用http界面，默认为localhost：28017  
+
+# Disable the HTTP interface (Defaults to localhost:27018).这个端口号写的是错的  
+
+#nohttpinterface = true  
+
+  
+
+# 关闭服务器端脚本，这将极大的限制功能  
+
+# Turns off server-side scripting.  This will result in greatly limited  
+
+# functionality  
+
+#noscripting = true  
+
+# 关闭扫描表，任何查询将会是扫描失败  
+
+# Turns off table scans.  Any query that would do a table scan fails.  
+
+#notablescan = true  
+
+# 关闭数据文件预分配  
+
+# Disable data file preallocation.  
+
+#noprealloc = true  
+
+# 为新数据库指定.ns文件的大小，单位:MB  
+
+# Specify .ns file size for new databases.  
+
+# nssize = <size>  
+
+  
+
+# Accout token for Mongo monitoring server.  
+
+#mms-token = <token>  
+
+# mongo监控服务器的名称  
+
+# Server name for Mongo monitoring server.  
+
+#mms-name = <server-name>  
+
+# mongo监控服务器的ping 间隔  
+
+# Ping interval for Mongo monitoring server.  
+
+#mms-interval = <seconds>  
+
+  
+
+# Replication Options 复制选项  
+
+  
+
+# in replicated mongo databases, specify here whether this is a slave or master 在复制中，指定当前是从属关系  
+
+#slave = true  
+
+#source = master.example.com  
+
+# Slave only: specify a single database to replicate  
+
+#only = master.example.com  
+
+# or  
+
+#master = true  
+
+#source = slave.example.com  
+
+[root@vm ~]#  
+
+以上是默认的配置文件中的一些参数，更多参数可以用 mongod -h 命令来查看  
+
+4.启动mongodb,运行下面的命令
+
+service mongod start
+
+chkconfig mongod on
+
+5.如果你要启动客户端,直接运行命令
+
+mongo
+
+
